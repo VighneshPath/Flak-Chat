@@ -1,0 +1,20 @@
+{% extends "layout.html" %}
+{% block heading %}
+    <title>Index</title>
+{% endblock %}
+
+{% block body %}
+    <div class = "container">
+        <div id="carouselExampleSlidesOnly" class="carousel slide" data-ride="carousel">
+            <div class="carousel-inner">
+                <div class="carousel-item active">
+                    <img src="\static\carouselback.jpg" class="d-block w-100" alt="">
+                    <div class="carousel-caption d-none d-md-block">
+                        <h3 style="color: white;">Welcome To Flak!</h3>
+                        <a href="{{ url_for('signup') }}" class = "btn" style="color: white;" >Get Started!</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

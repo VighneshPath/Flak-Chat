@@ -1,0 +1,119 @@
+{% extends "server_dashboard_baselayout.html" %}
+{% block heading %}
+    <title>Hello There {{ user.username }}</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/handlebars.js/4.0.11/handlebars.min.js"></script>
+    <script id="result" type="text/x-handlebars-template">
+        <div class="alert alert-dark" role="alert" style="margin-bottom: 0px;">
+          <small class="alert-heading">
+            {% raw -%}
+                {{ username }}
+            {%- endraw %}
+            </small>
+          <p>
+            {% raw -%}
+                {{ message }}
+            {%- endraw %}
+          </p>
+        </div>
+    </script>
+    <script type="text/javascript">
+        const template = Handlebars.compile(document.querySelector('#result').innerHTML);
+        document.addEventListener('DOMContentLoaded', ()=>{
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+            socket.on('connect', () => {
+                socket.emit('my event', {data: 'I\'m connected!'});
+
+                document.querySelectorAll(".new_form_message").forEach(function(button){
+                    button.onsubmit = function(){
+                        const message = this.querySelector(".new_message").value;
+                        this.querySelector(".new_message").value = "";
+                        var namespace = this.dataset.channelid;
+                        // const private_socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + '/' + namespace);
+
+                        socket.emit('new channel message', {message: message, sender : {{ user.id }}, channel_id : this.dataset.channelid, namespace: namespace});
+                        return false;
+                    };
+                });
+            });
+            document.querySelectorAll('.chats').forEach(function(button){
+                button.onclick = function(){
+
+                    if(button.dataset.clicked != "True")
+                    {
+                        var namespace = this.dataset.channelid;
+                        var private_socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port + '/' + namespace);
+                        private_socket.on('add message', data => {
+                            console.log(data);
+                            const content = template({'message': data["content"], 'username':data["sender"]});
+                            console.log(content);
+                            document.querySelector(`#user-messages-${this.dataset.channelid}`).innerHTML += content;
+                            document.querySelector(`#bottom-${this.dataset.channelid}`).scrollIntoView();
+                        });
+
+                        var id = button.id;
+                        console.log(button.className);
+                        console.log(button);
+                        var pos = button.className.search("active");
+                        const request = new XMLHttpRequest();
+                        request.open('POST', '/get_channel_messages');
+                        request.onload = () => {
+                                const data = JSON.parse(request.responseText);
+                                var i;
+                                console.log(data)
+                                for(i = 0; i < data.length; i++){
+                                    console.log(data[i]);
+                                    console.log(data[i]["content"]);
+                                    const content = template({"message":data[i]["content"], "username":data[i]["sender"]});
+                                    console.log(content);
+                                    document.querySelector(`#user-messages-${id}`).innerHTML += content;
+
+                                };
+                                document.querySelector(`#bottom-${id}`).scrollIntoView();
+                            };
+                        const data = new FormData();
+                        data.append("channel_id", id)
+                        console.log(button);
+                        const content_element = document.querySelector(`#list-${id}`);
+                        request.send(data);
+                        button.dataset.clicked = "True";
+                    }
+                }
+            });
+        });
+    </script>
+{% endblock %}
+
+{% block body %}
+    <div class="row">
+        <div class="col-2">
+            <div class="list-group sticky-top" id="list-tab" role="tablist" style="top: 56px;">
+                <a class="list-group-item list-group-item-action chats" href="{{ url_for('dashboard') }}" role="tab" aria-controls="home">Back</a>
+                {% for channel in channels %}
+                    <a class="list-group-item list-group-item-action chats" id="{{ channel.id }}" data-toggle="list" data-channelid = "{{ channel.id }}" href="#list-{{ channel.id }}" role="tab" aria-controls="home">{{ channel.name }}</a>
+                {% endfor %}
+            </div>
+        </div>
+        <div class="col-10">
+            <div class="tab-content" id="nav-tabContent">
+                {% for channel in channels %}
+                    <div class="tab-pane fade show" id="list-{{ channel.id }}" role="tabpanel" aria-labelledby="list-home-{{ channel.id }}">
+                        <ul id="user-messages-{{ channel.id }}" style="padding: 0px;"></ul>
+                        <div id="bottom-{{ channel.id }}"></div>
+                        <div class = "chat-form">
+                            <form class = "new_form_message" data-channelid = "{{ channel.id }}" style="position: fixed;bottom: 0;width: 100%;">
+                              <div class="form-row">
+                                <div class="col-9">
+                                  <input type="text" class="form-control new_message" placeholder="Type Something" name="new_user_message" autocomplete="off" >
+                                </div>
+                                <div class="col-1">
+                                  <button type="submit" class="btn btn-primary">Submit</button>
+                                </div>
+                              </div>
+                            </form>
+                        </div>
+                    </div>
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+{% endblock %}

@@ -1,0 +1,32 @@
+{% extends "loggingin.html" %}
+{% block heading %}
+    <title>Login</title>
+{% endblock %}
+
+{% block body %}
+    <div class="container">
+        <div class = "card text-center border-dark mb-3" style="width: 32rem; position: absolute; top: 50%; left: 50%; transform: translate(-50%, -50%);">
+            <img src="/static/logo.png" style="margin: auto;" class="img-thumbnail" width="100">
+            <h3 class="card-header">Sign Up!</h3>
+            <div class = "card-body">
+                <form action="{{ url_for('dashboard') }}" method="post">
+                    <div class="form-group" id = "username">
+                        <label for="UserName">User Name</label>
+                        <input type="text" name="user_name" class="form-control" id="UserName" aria-describedby = "name_help" autocomplete="off" required>
+                        <small id = "name_help" class="form-text text-muted">This is what will be shown to others in the App!</small>
+                    </div>
+                    <div class = "form-group">
+                        <label for="Email">Email Address</label>
+                        <input type="email" name="user_email" class="form-control" id="Email" autocomplete="off" required>
+                    </div>
+                    <div class="form-group">
+                        <label for="Password">Password</label>
+                        <input type="password" name="user_password" class="form-control" id="Password" required>
+                    </div>
+                    <button id="signup_submit" type="submit" class="btn btn-dark">Submit</button>
+                    <small class = "form-text text-muted">{{message}}</small>
+                </form>
+            </div>
+        </div>
+    </div>
+{% endblock %}
