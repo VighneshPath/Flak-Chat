@@ -1,6 +1,6 @@
 # Flak-Chat
 
-A proprietary freeware instant messaging Web Application that allows a User to chat with other users, in the form of direct messages or separate Servers.
+A proprietary freeware instant messaging Web Application that allows a User to chat with other users, in the form of direct messages or separate server messages.
 
 This Application tries to replicate Whatsapp's User Interface for Direct Messages and Discord's User Interface for Server Messages, though the similar name to Slack, it does not try to replicate any features from it.
 
