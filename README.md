@@ -4,6 +4,16 @@ A proprietary freeware instant messaging Web Application that allows a user to c
 
 This Application tries to replicate Whatsapp's User Interface for Direct Messages and Discord's User Interface for Server Messages, though the similar name to Slack, it does not try to replicate any features from it.
 
+#### This Web Application was made for the completion of the CS50 Course, and fulfills the following requirements: 
+
+https://docs.cs50.net/ocw/web/projects/2/project2.html
+
+#### Some Additional Features:
+
+    The Application Uses A database, as opposed to using global variables as mentioned in the Project Requirements.
+
+
+
 ### Link to demonstration: 
 
 [![Watch the video](https://cdn.discordapp.com/attachments/703184836097081406/731153153650720798/tn.png)](https://youtu.be/mf0qoZe-Pl4)
