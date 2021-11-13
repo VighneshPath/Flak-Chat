@@ -40,7 +40,7 @@ https://flak-chat.herokuapp.com/
 
     - An option to leave the Server, once joined.
     
-    - A better way to represent a Unique Identity, rahter than using incremental integers.
+    - A better way to represent a Unique Identity, rather than using incremental integers.
     
     - Fix Mobile View
     
